@@ -1,7 +1,5 @@
 # SolidMeals
 
-A new Flutter project.
-
 ## Screenshots
 
 ![ScreenShot1](./screenshots/1.png)
