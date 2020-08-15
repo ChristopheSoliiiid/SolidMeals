@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../components/meal_item.dart';
 import '../../models/meal.dart';
+import '../../components/main_drawer.dart';
 
 class CategoryMeals extends StatefulWidget {
   static const routeName = '/category-meals';
 
   final List<Meal> availableMeals;
+  final Map<String, bool> currentFilters;
+  final Function saveFilters;
 
-  CategoryMeals(this.availableMeals);
+  CategoryMeals(this.availableMeals, this.currentFilters, this.saveFilters);
 
   @override
   _CategoryMealsState createState() => _CategoryMealsState();
@@ -20,6 +23,8 @@ class _CategoryMealsState extends State<CategoryMeals> {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+
     final routeArgs =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     final categoryId = routeArgs['id'];
@@ -28,13 +33,6 @@ class _CategoryMealsState extends State<CategoryMeals> {
     displayedMeals = widget.availableMeals.where((meal) {
       return meal.categories.contains(categoryId);
     }).toList();
-    super.didChangeDependencies();
-  }
-
-  void _removeMeal(String mealId) {
-    setState(() {
-      displayedMeals.removeWhere((meal) => meal.id == mealId);
-    });
   }
 
   @override
@@ -42,13 +40,19 @@ class _CategoryMealsState extends State<CategoryMeals> {
     return Scaffold(
       appBar: AppBar(
         title: Text(categoryTitle),
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.settings, color: Colors.black54),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
+          )
+        ],
       ),
+      endDrawer: MainDrawer(widget.currentFilters, widget.saveFilters),
       body: ListView.builder(
         itemBuilder: (ctx, index) {
-          return MealItem(
-            meal: displayedMeals[index],
-            removeItem: _removeMeal,
-          );
+          return MealItem(meal: displayedMeals[index]);
         },
         itemCount: displayedMeals.length,
       ),

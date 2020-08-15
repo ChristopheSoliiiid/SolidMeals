@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../category/category_meals.dart';
+import '../../../models/category.dart';
 
 class CategoryItem extends StatelessWidget {
-  final String id;
-  final String title;
-  final Color backgroundColor;
-  final String imageUrl;
+  final Category category;
+  final int mealCounter;
 
-  CategoryItem(this.id, this.title, this.backgroundColor, this.imageUrl);
+  CategoryItem(this.category, this.mealCounter);
 
   void selectCategory(BuildContext context) {
     Navigator.of(context).pushNamed(
       CategoryMeals.routeName,
       arguments: {
-        'id': id,
-        'title': title,
+        'id': category.id,
+        'title': category.title,
       },
     );
   }
@@ -24,11 +23,11 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        imageUrl != null
+        category.imageUrl != null
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.network(
-                  imageUrl,
+                  category.imageUrl,
                   height: double.infinity,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -37,7 +36,7 @@ class CategoryItem extends StatelessWidget {
             : Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [backgroundColor.withOpacity(0.7), backgroundColor],
+                    colors: [category.color.withOpacity(0.7), category.color],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -55,11 +54,34 @@ class CategoryItem extends StatelessWidget {
               horizontal: 15,
             ),
             child: Text(
-              title,
+              category.title,
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
         ),
+        Positioned(
+          top: 50,
+          child: Container(
+            padding: EdgeInsets.only(top: 0, right: 7, bottom: 3, left: 7),
+            color: Colors.white70,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  mealCounter.toString(),
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
+                const SizedBox(width: 2),
+                Icon(
+                  Icons.restaurant_menu,
+                  size: 18,
+                  color: Colors.black,
+                )
+              ],
+            ),
+          ),
+        ),
+        // Pour l'effet lors du "clic"
         Positioned.fill(
           child: Material(
             color: Colors.transparent,

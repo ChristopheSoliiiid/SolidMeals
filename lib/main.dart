@@ -7,7 +7,6 @@ import 'screens/tabs/tabs.dart';
 import 'screens/categories/categories.dart';
 import 'screens/category/category_meals.dart';
 import 'screens/meal/meal_detail.dart';
-import 'screens/filters/filters.dart';
 
 void main() {
   runApp(MyApp());
@@ -75,14 +74,16 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: appTheme(),
       routes: {
-        '/': (context) => Tabs(_favoriteMeals),
-        CategoryMeals.routeName: (context) => CategoryMeals(_availableMeals),
+        '/': (context) =>
+            Tabs(_availableMeals, _favoriteMeals, _filters, _setFilters),
+        CategoryMeals.routeName: (context) =>
+            CategoryMeals(_availableMeals, _filters, _setFilters),
         MealDetail.routeName: (context) =>
             MealDetail(_toggleFavorite, _isMealFavorite),
-        Filters.routeName: (context) => Filters(_filters, _setFilters),
       },
       onUnknownRoute: (settings) {
-        return MaterialPageRoute(builder: (context) => Categories());
+        return MaterialPageRoute(
+            builder: (context) => Categories(_availableMeals));
       },
     );
   }

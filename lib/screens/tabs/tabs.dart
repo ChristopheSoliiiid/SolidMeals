@@ -6,9 +6,17 @@ import '../../components/main_drawer.dart';
 import '../../models/meal.dart';
 
 class Tabs extends StatefulWidget {
+  final List<Meal> availableMeals;
   final List<Meal> favoriteMeals;
+  final Map<String, bool> currentFilters;
+  final Function saveFilters;
 
-  Tabs(this.favoriteMeals);
+  Tabs(
+    this.availableMeals,
+    this.favoriteMeals,
+    this.currentFilters,
+    this.saveFilters,
+  );
 
   @override
   _TabsState createState() => _TabsState();
@@ -21,7 +29,7 @@ class _TabsState extends State<Tabs> {
   @override
   void initState() {
     _pages = [
-      {'page': Categories(), 'title': 'Categories'},
+      {'page': Categories(widget.availableMeals), 'title': 'Categories'},
       {'page': Favorites(widget.favoriteMeals), 'title': 'Favorites'},
     ];
     super.initState();
@@ -47,7 +55,7 @@ class _TabsState extends State<Tabs> {
           )
         ],
       ),
-      endDrawer: MainDrawer(),
+      endDrawer: MainDrawer(widget.currentFilters, widget.saveFilters),
       body: _pages[_selectedPageIndex]['page'],
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.black,

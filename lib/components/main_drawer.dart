@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import '../screens/filters/filters.dart';
 
 class MainDrawer extends StatelessWidget {
+  final Map<String, bool> currentFilters;
+  final Function saveFilters;
+
+  MainDrawer(this.currentFilters, this.saveFilters);
+
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
       leading: Icon(icon, size: 26),
@@ -22,29 +27,35 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          Container(
-            color: Color.fromRGBO(200, 220, 255, 1),
-            height: 120,
-            width: double.infinity,
-            padding: EdgeInsets.all(20),
+          Stack(
             alignment: Alignment.centerLeft,
-            child: Text(
-              'Solid Meals',
-              style: TextStyle(
-                fontSize: 26,
-                fontFamily: 'RobotoCondensed',
-                fontWeight: FontWeight.w900,
-                color: Theme.of(context).accentColor,
+            children: [
+              Image.network(
+                'https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-black-meat-western-food-banner-background-image_194600.jpg',
+                height: 120,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
-            ),
+              Center(
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.black54,
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Solid Meals',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'RobotoCondensed',
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-          SizedBox(height: 20),
-          buildListTile('Meals', Icons.restaurant, () {
-            Navigator.of(context).pushReplacementNamed('/');
-          }),
-          buildListTile('Settings', Icons.settings, () {
-            Navigator.of(context).pushReplacementNamed(Filters.routeName);
-          }),
+          Filters(currentFilters, saveFilters),
         ],
       ),
     );
